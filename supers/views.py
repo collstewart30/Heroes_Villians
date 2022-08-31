@@ -30,7 +30,14 @@ def supers_detail(request, pk):
     super = get_object_or_404(super, pk=pk)
 
     if request.method == 'GET':
+
+        super_type_name = request.query_params.get('super_type')
+        print(super_type_name)
+
+        queryset = Super.objects.all()
         serializer = SuperSerializer(super)
+
+
         return Response(serializer.data)
     elif request.method == 'PUT':
         serializer = SuperSerializer(super, data=request.data)
