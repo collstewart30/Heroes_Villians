@@ -22,3 +22,17 @@ def supers_list(request):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'POST'])
+def supers_detail(request, pk):
+
+    try:
+        supers = Super.objects.get(pk=pk)
+        serializer = SuperSerializer(supers)
+
+        return Response(serializer.data)
+    except Super.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
