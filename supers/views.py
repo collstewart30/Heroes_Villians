@@ -24,15 +24,19 @@ def supers_list(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'PUT'])
 def supers_detail(request, pk):
 
-    try:
-        supers = Super.objects.get(pk=pk)
-        serializer = SuperSerializer(supers)
+    supers = get_object_or_404(super, pk=pk)
 
+    if request.method == 'GET':
+        serializer = SuperSerializer(supers)
         return Response(serializer.data)
-    except Super.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    elif request.method == 'PUT':
+
+        serializer = SuperSerializer(supers, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 
